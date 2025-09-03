@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="RecipeDetailsEntity" representedClassName="RecipeDetailsEntity" syncable="YES">
+        <attribute name="area" attributeType="String"/>
+        <attribute name="categoryName" attributeType="String"/>
+        <attribute name="id" attributeType="String"/>
+        <attribute name="ingredients" optional="YES" attributeType="Transformable" valueTransformerName="IngredientArrayTransformer"/>
+        <attribute name="instructions" attributeType="String"/>
+        <attribute name="isFavorite" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="tags" optional="YES" attributeType="String"/>
+        <attribute name="thumbUrl" attributeType="URI"/>
+        <attribute name="youtubeUrl" optional="YES" attributeType="URI"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+</model>

@@ -1,0 +1,37 @@
+# Xcode user junk
+*.xcuserstate
+xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+
+# Derived/build
+DerivedData/
+build/
+*.ipa
+*.dSYM
+*.xcarchive
+
+# SwiftPM
+.swiftpm/
+.build/
+FavoriteRecipeLibrary/Package.resolved
+
+# CocoaPods
+Pods/
+# But keep:
+!Podfile
+!Podfile.lock
+
+# Fastlane noise
+fastlane/report.xml
+fastlane/test_output/
+
+# Apple junk
+.DS_Store
+
+# Secrets
+Config/Secrets.xcconfig
+**/GoogleService-Info.plist
+*.p12
+*.mobileprovision
+*.cer
