@@ -56,5 +56,17 @@ struct NetworkServiceStub: FRLib.NetworkServicing {
 
         return .preview
     }
+
+    func searchRecipes(query: String) async throws -> [FRLib.RecipeDetails] {
+        if hasError {
+            throw FRLib.CustomError.network(desc: "Network error")
+        }
+
+        var result = [FRLib.RecipeDetails]()
+        for index in 0..<count {
+            result.append(.preview(id: String(index)))
+        }
+        return result
+    }
 }
 #endif

@@ -31,6 +31,7 @@ public struct ErrorView: View {
             }
             Spacer()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

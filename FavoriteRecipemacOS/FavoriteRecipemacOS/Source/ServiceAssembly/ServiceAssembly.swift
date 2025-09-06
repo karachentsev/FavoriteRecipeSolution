@@ -32,11 +32,12 @@ final class ServiceAssembly {
         let randomViewModel = FRLib.RecipeDetailsViewModel(id: nil, storageService: persistentContainer.storageService,
                                                            storagePublishService: persistentContainer.storagePublishService,
                                                            appRouter: appRouter)
+        let searchViewModel = FRLib.RecipesSearchViewModel(appRouter: appRouter)
         let favoriteViewModel = FRLib.FavoriteRecipeListViewModel(storageService: persistentContainer.storageService,
                                                                   storagePublishService: persistentContainer.storagePublishService,
                                                                   appRouter: appRouter)
         let viewModel = RootViewModel(categoryListViewModel: categoryViewModel, randomRecipeViewModel: randomViewModel,
-                                      favoriteRecipeListViewModel: favoriteViewModel)
+                                      searchViewModel: searchViewModel, favoriteRecipeListViewModel: favoriteViewModel)
         let viewController = NSHostingController(rootView: RootView(viewModel: viewModel))
         return viewController
     }

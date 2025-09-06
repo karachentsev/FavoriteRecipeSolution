@@ -17,6 +17,7 @@ extension FRLib {
         func getRecipes(categoryName: String) async throws -> [Recipe]
         func getRecipeDetails(id: String) async throws -> RecipeDetails
         func getRandomRecipeDetails() async throws -> RecipeDetails
+        func searchRecipes(query: String) async throws -> [RecipeDetails]
     }
 
     // MARK: - NetworkService
@@ -50,7 +51,7 @@ extension FRLib {
                 .validate()
                 .serializingDecodable(RecipeDetailsResponse.self)
                 .response
-                .result.get().meals.first
+                .result.get().meals?.first
             if let details {
                 return details.recipeDetails
             } else {
@@ -63,13 +64,22 @@ extension FRLib {
                 .validate()
                 .serializingDecodable(RecipeDetailsResponse.self)
                 .response
-                .result.get().meals.first
+                .result.get().meals?.first
 
             if let details {
                 return details.recipeDetails
             } else {
                 throw CustomError.network(desc: "No random details")
             }
+        }
+
+        public func searchRecipes(query: String) async throws -> [RecipeDetails] {
+            let recipes = try await AF.request(ApiUrls.search(query: query), method: .get)
+                .validate()
+                .serializingDecodable(RecipeDetailsResponse.self)
+                .response
+                .result.get().meals
+            return recipes?.map { $0.recipeDetails } ?? []
         }
     }
 }
@@ -180,6 +190,6 @@ extension FRLib.NetworkService {
 
         // MARK: - Properties
 
-        let meals: [Item]
+        let meals: [Item]?
     }
 }

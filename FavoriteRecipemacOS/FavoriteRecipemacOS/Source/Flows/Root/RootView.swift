@@ -47,6 +47,8 @@ struct RootView: View {
                 CategoryListView(viewModel: viewModel.categoryListViewModel)
             case .random:
                 RandomRecipeView(viewModel: viewModel.randomRecipeViewModel)
+            case .search:
+                RecipesSearchView(viewModel: viewModel.searchViewModel)
             case .favorites:
                 FavoriteRecipeListView(viewModel: viewModel.favoriteRecipeListViewModel)
             }
@@ -60,6 +62,7 @@ struct RootView: View {
     let count = 20
     RootView(viewModel: .init(categoryListViewModel: .preview(count: count),
                               randomRecipeViewModel: .preview(count: count),
+                              searchViewModel: .preview(count: count),
                               favoriteRecipeListViewModel: .preview(count: count)))
 }
 #endif

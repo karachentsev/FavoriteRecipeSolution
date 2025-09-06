@@ -15,6 +15,7 @@ enum ApiUrls {
     static func recipes(categoryName: String) -> String { makeUrlStr(path: "filter", queryItems: ["c": categoryName]) }
     static func recipeDetails(id: String) -> String { makeUrlStr(path: "lookup", queryItems: ["i": id]) }
     static var randomRecipeDetails: String { makeUrlStr(path: "random") }
+    static func search(query: String) -> String { makeUrlStr(path: "search", queryItems: ["s": query]) }
 
     // MARK: - Private
 

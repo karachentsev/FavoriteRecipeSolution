@@ -14,6 +14,7 @@ extension FRLib {
 
         case categories
         case random
+        case search
         case favorites
 
         // MARK: - Getters properties
@@ -24,6 +25,8 @@ extension FRLib {
                 return "list.bullet"
             case .random:
                 return "wand.and.stars"
+            case .search:
+                return "magnifyingglass"
             case .favorites:
                 return "star"
             }
@@ -35,6 +38,8 @@ extension FRLib {
                 return "Categories"
             case .random:
                 return "Random"
+            case .search:
+                return "Search"
             case .favorites:
                 return "Favorites"
             }

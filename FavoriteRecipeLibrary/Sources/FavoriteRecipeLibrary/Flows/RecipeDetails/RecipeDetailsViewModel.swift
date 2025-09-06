@@ -26,6 +26,7 @@ extension FRLib {
         private let networkService: NetworkServicing
         private let storageService: StorageServicing
         private let storagePublishService: StoragePublishServicing
+        private let cache: RecipeDetailsCachable
         private let appRouter: AppRouting
         public private(set) var id: String?
         private var recipeStreamTask: Task<(), Never>?
@@ -33,12 +34,14 @@ extension FRLib {
         // MARK: - Init / Deinit
 
         public init(id: String?, networkService: NetworkServicing = NetworkService.shared, storageService: StorageServicing,
-                    storagePublishService: StoragePublishServicing, appRouter: AppRouting) {
+                    storagePublishService: StoragePublishServicing, cache: RecipeDetailsCachable = RecipeDetailsCache.shared,
+                    appRouter: AppRouting) {
             self.id = id
             self.isRandom = id == nil || id?.isEmpty == true
             self.networkService = networkService
             self.storageService = storageService
             self.storagePublishService = storagePublishService
+            self.cache = cache
             self.appRouter = appRouter
         }
 
@@ -70,6 +73,13 @@ extension FRLib {
                 isFavorite = recipeDetails.isFavorite
                 isLoading = false
             }
+
+            if let cached = await cache.value(by: id) {
+                recipeDetails = cached
+                isLoading = false
+                return
+            }
+
             do {
                 recipeDetails = try await networkService.getRecipeDetails(id: id)
             } catch {

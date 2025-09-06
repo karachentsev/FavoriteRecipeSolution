@@ -25,10 +25,10 @@ extension Entity where Self: NSManagedObject {
         let fetchRequest = NSFetchRequest<Self>(entityName: entityName)
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = sortDescriptors
-        if let fetchLimit = fetchLimit {
+        if let fetchLimit {
             fetchRequest.fetchLimit = fetchLimit
         }
-        if let fetchOffset = fetchOffset {
+        if let fetchOffset {
             fetchRequest.fetchOffset = fetchOffset
         }
         fetchRequest.returnsObjectsAsFaults = true
