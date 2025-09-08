@@ -50,6 +50,7 @@ extension FRLib {
         private func setup() {
             subscription = $inputQuery
                 .dropFirst(1)
+                .removeDuplicates()
                 .map { $0.trimmingCharacters(in: .whitespaces) }
                 .filter { [weak self] text in
                     if let self {
@@ -60,7 +61,6 @@ extension FRLib {
                     }
                     return text.count >= Constants.minCharactersCount
                 }
-                .removeDuplicates()
                 .debounce(for: 1, scheduler: DispatchQueue.main)
                 .sink { [weak self] query in
                     guard let self else { return }

@@ -40,7 +40,7 @@ extension FRLib.RecipesSearchView {
         private var desc: String {
             switch status {
             case .initial: "Please enter at least \(minCharactersCount) characters to start searching"
-            case .result: "We couldn’t find any matches." + "\n" + "Try a different name or ingredient."
+            case .result: "We couldn’t find any matches." + "\n" + "Try a different name"
             }
         }
 
@@ -51,7 +51,7 @@ extension FRLib.RecipesSearchView {
                 Image(systemName: systemName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 120, height: 120)
+                    .frame(maxWidth: 120, maxHeight: 120)
                     .foregroundStyle(Color.accentColor)
                     .shadow(radius: 6)
 

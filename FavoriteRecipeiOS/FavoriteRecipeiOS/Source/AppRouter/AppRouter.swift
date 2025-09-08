@@ -71,6 +71,9 @@ extension AppRouter: FRLib.AppRouting {
 
     func showRecipe(id: String) {
         let viewController = ServiceAssembly.shared.makeRecipeDetailsViewController(for: id)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            viewController.preferredContentSize = CGSize(width: 800, height: 1000)
+        }
         findViewControllerToPresent().present(viewController, animated: true)
     }
 
@@ -86,6 +89,9 @@ extension AppRouter: FRLib.AppRouting {
             self?.closeYouTube(for: url)
         }
         let viewController = UIHostingController(rootView: view)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            viewController.modalPresentationStyle = .fullScreen
+        }
         findViewControllerToPresent().present(viewController, animated: true)
     }
 

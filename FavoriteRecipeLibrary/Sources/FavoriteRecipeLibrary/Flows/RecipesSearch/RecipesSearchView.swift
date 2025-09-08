@@ -61,6 +61,7 @@ extension FRLib {
                         }
                     }
                 }
+                .scrollDismissesKeyboard(.immediately)
             }
         }
     }

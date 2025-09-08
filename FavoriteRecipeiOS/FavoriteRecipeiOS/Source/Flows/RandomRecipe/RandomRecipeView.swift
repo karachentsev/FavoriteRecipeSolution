@@ -13,7 +13,7 @@ struct RandomRecipeView: View {
     // MARK: - Properties
 
     @ObservedObject var viewModel: FRLib.RecipeDetailsViewModel
-    @State private var isAppeared = false
+    @State private var hasAppeared = false
 
     // MARK: - Body
 
@@ -32,8 +32,8 @@ struct RandomRecipeView: View {
                 }
             })
             .onAppear {
-                guard !isAppeared else { return }
-                isAppeared = true
+                guard !hasAppeared else { return }
+                hasAppeared = true
                 Task {
                     await viewModel.loadRandomData()
                 }
