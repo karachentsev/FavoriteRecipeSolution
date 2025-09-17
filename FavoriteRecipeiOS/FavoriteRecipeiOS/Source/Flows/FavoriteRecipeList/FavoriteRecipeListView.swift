@@ -10,7 +10,6 @@ import FavoriteRecipeLibrary
 
 private enum Constants {
     static let toolbarHeight: CGFloat = 30
-    static let toolbarCornerRadius: CGFloat = 6
 }
 
 struct FavoriteRecipeListView: View {
@@ -27,36 +26,32 @@ struct FavoriteRecipeListView: View {
                 .padding([.leading, .trailing])
                 .navigationBarTitle("Favorites")
                 .toolbar {
-                    Picker("Sort by", selection: .init(get: {
-                        viewModel.sortedBy
-                    }, set: { item in
-                        Task {
-                            await viewModel.changeSorting(to: item)
+                    ToolbarItem(placement: .topBarLeading) {
+                        Picker("Sort by", selection: .init(get: {
+                            viewModel.sortedBy
+                        }, set: { item in
+                            Task {
+                                await viewModel.changeSorting(to: item)
+                            }
+                        })) {
+                            ForEach(FRLib.StoragePublishService.SortedBy.allCases) {
+                                Text($0.title).tag($0)
+                            }
                         }
-                    })) {
-                        ForEach(FRLib.StoragePublishService.SortedBy.allCases) {
-                            Text($0.title).tag($0)
-                        }
-                    }
-                    .pickerStyle(.navigationLink)
-                    .frame(height: Constants.toolbarHeight)
-                    .background {
-                        RoundedRectangle(cornerRadius: Constants.toolbarCornerRadius)
-                            .fill(Color.gray.opacity(0.3))
+                        .pickerStyle(.navigationLink)
+                        .frame(height: Constants.toolbarHeight)
                     }
 
-                    Button("Clear all") {
-                        Task {
-                            await viewModel.clearAll()
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Clear all") {
+                            Task {
+                                await viewModel.clearAll()
+                            }
                         }
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    .padding([.leading, .trailing], 8)
-                    .foregroundColor(.red)
-                    .frame(height: Constants.toolbarHeight)
-                    .background {
-                        RoundedRectangle(cornerRadius: Constants.toolbarCornerRadius)
-                            .fill(Color.red.opacity(0.3))
+                        .buttonStyle(PlainButtonStyle())
+                        .padding()
+                        .foregroundColor(.red)
+                        .frame(height: Constants.toolbarHeight)
                     }
                 }
         }
