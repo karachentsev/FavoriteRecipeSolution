@@ -26,7 +26,7 @@ extension FRLib {
 
         private let container: NSPersistentContainer
         private let context: NSManagedObjectContext
-        private var lastToken: NSPersistentHistoryToken?
+        private var lastToken: PersistentHistoryToken?
 
         // MARK: - Init / Deinit
 
@@ -37,17 +37,19 @@ extension FRLib {
 
         // MARK: - Private
 
-        private func fetchPersistentHistoryTransactionsAndChanges() {
-            context.performAndWait {
-                let changeRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: lastToken)
-                guard let historyResult = try? context.execute(changeRequest) as? NSPersistentHistoryResult,
+        private func fetchPersistentHistoryTransactionsAndChanges() async {
+            lastToken = await context.perform { [lastToken] in
+                let changeRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: lastToken?.value)
+                guard let historyResult = try? self.context.execute(changeRequest) as? NSPersistentHistoryResult,
                       let history = historyResult.result as? [NSPersistentHistoryTransaction], !history.isEmpty else {
-                    return
+                    return lastToken
                 }
+                var newToken: PersistentHistoryToken?
                 for transaction in history {
-                    context.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
-                    lastToken = transaction.token
+                    self.context.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
+                    newToken = .init(value: transaction.token)
                 }
+                return newToken
             }
         }
     }
@@ -55,13 +57,13 @@ extension FRLib {
 
 extension FRLib.StoragePublishService {
     public func getRecipeDetails(id: String) async -> FRLib.RecipeDetails? {
-        var result: FRLib.RecipeDetails?
-        context.performAndWait {
-            if let entity = RecipeDetailsEntity.findFirst(by: id, in: context) {
+        return await context.perform {
+            var result: FRLib.RecipeDetails?
+            if let entity = RecipeDetailsEntity.findFirst(by: id, in: self.context) {
                 result = .init(entity: entity)
             }
+            return result
         }
-        return result
     }
 
     public func getFavoriteRecipeStream(id: String) -> AsyncStream<FRLib.RecipeDetails> {
@@ -73,7 +75,7 @@ extension FRLib.StoragePublishService {
 
                 for await _ in NotificationCenter.default.notifications(named: .NSPersistentStoreRemoteChange,
                                                                         object: container.persistentStoreCoordinator) {
-                    fetchPersistentHistoryTransactionsAndChanges()
+                    await fetchPersistentHistoryTransactionsAndChanges()
                     if let recipeDetails = await getRecipeDetails(id: id) {
                         continuation.yield(recipeDetails)
                     }
@@ -92,7 +94,7 @@ extension FRLib.StoragePublishService {
 
                 for await _ in NotificationCenter.default.notifications(named: .NSPersistentStoreRemoteChange,
                                                                         object: container.persistentStoreCoordinator) {
-                    fetchPersistentHistoryTransactionsAndChanges()
+                    await fetchPersistentHistoryTransactionsAndChanges()
                     continuation.yield(await getFavoriteRecipes(sortedBy: sortedBy))
                 }
             }
@@ -103,15 +105,16 @@ extension FRLib.StoragePublishService {
     }
 
     private func getFavoriteRecipes(sortedBy: SortedBy) async -> [[FRLib.FavoriteRecipe]] {
-        var result = [[FRLib.FavoriteRecipe]]()
-        context.performAndWait {
+        return await context.perform {
+            var result = [[FRLib.FavoriteRecipe]]()
             let predicate = NSPredicate(format: "\(#keyPath(RecipeDetailsEntity.isFavorite)) == %d", true)
             var sortDescriptors = [sortedBy.descriptor]
             if sortedBy != .name {
                 sortDescriptors.append(SortedBy.name.descriptor)
             }
-            guard let entities = RecipeDetailsEntity.findAll(with: predicate, sortDescriptors: sortDescriptors, in: context) else {
-                return
+            guard let entities = RecipeDetailsEntity.findAll(with: predicate, sortDescriptors: sortDescriptors,
+                                                             in: self.context) else {
+                return result
             }
             for entity in entities {
                 let recipe = FRLib.FavoriteRecipe(entity: entity)
@@ -137,8 +140,8 @@ extension FRLib.StoragePublishService {
                     }
                 }
             }
+            return result
         }
-        return result
     }
 }
 
@@ -170,5 +173,11 @@ extension FRLib.StoragePublishService {
         // MARK: - Identifiable
 
         public var id: String { rawValue }
+    }
+}
+
+extension FRLib.StoragePublishService {
+    private struct PersistentHistoryToken: @unchecked Sendable {
+        let value: NSPersistentHistoryToken?
     }
 }

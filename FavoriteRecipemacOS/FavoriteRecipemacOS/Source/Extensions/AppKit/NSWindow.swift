@@ -78,8 +78,10 @@ private final class PresentAnimator: NSObject, NSViewControllerPresentationAnima
             context.duration = Self.duration
             containerView.alphaValue = 0
         } completionHandler: {
-            self.containerView.removeFromSuperview()
-            viewController.removeFromParent()
+            DispatchQueue.main.async {
+                self.containerView.removeFromSuperview()
+                viewController.removeFromParent()
+            }
         }
     }
 }
