@@ -31,12 +31,7 @@ extension FRLib {
 
         public var body: some View {
             mainView
-                .alert(isPresented: $viewModel.showingAlert) {
-                    Alert(title: Text("Error"), message: Text(viewModel.error?.localizedDescription ?? ""),
-                          dismissButton: .default(Text("OK"), action: {
-                        viewModel.showingAlert = false
-                    }))
-                }
+                .errorAlert($viewModel.error)
         }
 
         // MARK: - Private

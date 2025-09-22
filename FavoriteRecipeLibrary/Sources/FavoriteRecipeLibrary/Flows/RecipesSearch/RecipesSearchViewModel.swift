@@ -23,9 +23,8 @@ extension FRLib {
         @Published public var inputQuery = ""
         @Published private(set) var recipes = [RecipeDetails]()
         @Published private(set) var isLoading = false
-        @Published var showingAlert = false
+        @Published var error: CustomError?
         private let cache: RecipeDetailsCachable
-        private(set) var error: CustomError? { didSet { showingAlert = error != nil } }
         private let networkService: NetworkServicing
         private let appRouter: AppRouting
         private var subscription: AnyCancellable?

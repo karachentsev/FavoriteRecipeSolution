@@ -65,12 +65,7 @@ extension FRLib {
                     .listRowSeparator(.hidden)
                 }
                 .scrollContentBackground(.hidden)
-                .alert(isPresented: $viewModel.showingAlert) {
-                    Alert(title: Text("Error"), message: Text(viewModel.error?.localizedDescription ?? ""),
-                          dismissButton: .default(Text("OK"), action: {
-                        viewModel.showingAlert = false
-                    }))
-                }
+                .errorAlert($viewModel.error)
             }
         }
     }

@@ -15,8 +15,7 @@ extension FRLib {
 
         @Published private(set) var recipes = [Recipe]()
         @Published private(set) var isLoading = false
-        @Published var showingAlert = false
-        private(set) var error: CustomError? { didSet { showingAlert = error != nil } }
+        @Published var error: CustomError?
         public let category: Category
         private let networkService: NetworkServicing
         private let appRouter: AppRouting

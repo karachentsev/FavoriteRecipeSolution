@@ -8,13 +8,13 @@
 import Foundation
 
 extension FRLib {
-    public enum CustomError: Error {
+    public enum CustomError: LocalizedError {
         case general
         case message(desc: String)
         case network(desc: String)
         case coreData(desc: String)
 
-        public var localizedDescription: String {
+        public var errorDescription: String? {
             switch self {
             case .general:
                 return "Something went wrong!"
