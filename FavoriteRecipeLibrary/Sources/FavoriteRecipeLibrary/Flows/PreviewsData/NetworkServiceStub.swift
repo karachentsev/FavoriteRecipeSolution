@@ -12,6 +12,7 @@ struct NetworkServiceStub: FRLib.NetworkServicing {
 
     // MARK: - Properties
 
+    var categories: [FRLib.Category]?
     var count = 10
     var hasError = false
 
@@ -20,6 +21,10 @@ struct NetworkServiceStub: FRLib.NetworkServicing {
     func getCategories() async throws -> [FRLib.Category] {
         if hasError {
             throw FRLib.CustomError.network(desc: "Network error")
+        }
+
+        if let categories {
+            return categories
         }
 
         var result = [FRLib.Category]()

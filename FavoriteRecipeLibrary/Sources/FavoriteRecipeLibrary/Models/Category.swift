@@ -8,7 +8,7 @@
 import Foundation
 
 extension FRLib {
-    public struct Category: Sendable, Identifiable, Decodable {
+    public struct Category: Equatable, Sendable, Identifiable, Decodable {
 
         // MARK: - Properties
 
